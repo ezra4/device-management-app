@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres:13.1-alpine
+
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+      timeout: 45s
+      interval: 10s
+      retries: 5
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=DeviceManagement
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+    expose: 
+      - "5433"
+    container_name: DB_assignment1
+
+
+  backend:
+    build: ./DeviceManagement
+    container_name: backend
+    image: backend3:latest
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on: 
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/DeviceManagement
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+
+  frontend:
+    depends_on:
+      - backend
+    image: frontend3:latest
+    container_name: frontend
+    build: ./frontend/frontend
+    env_file: ./frontend/frontend/.env
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
