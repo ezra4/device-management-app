@@ -12,8 +12,8 @@ services:
       retries: 5
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=*******
+      - POSTGRES_PASSWORD=********
       - POSTGRES_DB=DeviceManagement
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
@@ -24,7 +24,7 @@ services:
 
 
   backend:
-    build: ./DeviceManagement
+    build: ./backend
     container_name: backend
     image: backend3:latest
     restart: always
@@ -34,8 +34,8 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/DeviceManagement
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_DATASOURCE_USERNAME=******
+      - SPRING_DATASOURCE_PASSWORD=*******
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create
 
   frontend:
